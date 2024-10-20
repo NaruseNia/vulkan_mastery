@@ -60,6 +60,14 @@ void GfxDevice::init_physical_device() {
     vkEnumeratePhysicalDevices(vk_instance, &count, devices.data());
 
     std::cout << "INFO: " << "Physical devices found: " << count << std::endl;
+
+    std::for_each_n(devices.begin(), count, [&](auto val) {
+        int idx = std::distance(devices.begin(), std::find(devices.begin(), devices.end(), val));
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(val, &properties);
+        std::cout << "INFO: " << "  " << idx << ": " << properties.deviceName << std::endl;
+    });
+
     vk_physical_device = devices[0];
     vkGetPhysicalDeviceMemoryProperties(vk_physical_device, &vk_memory_properties);
     vkGetPhysicalDeviceProperties(vk_physical_device, &vk_device_properties);
